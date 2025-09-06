@@ -23,7 +23,7 @@ jobs:
 
     - name: Create deployment archive
       run: |
-        tar -czf deployment.tar.gz package.json server.js node_modules
+        tar -czf deployment.tar.gz package.json index.js node_modules
 
     - name: Deploy to VM
       uses: appleboy/ssh-action@v1.0.0
@@ -33,7 +33,7 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         script: |
           # Stop existing process if running
-          sudo pkill -f "node server.js" || true
+          sudo pkill -f "node index.js" || true
           
           # Create app directory
           sudo mkdir -p /opt/backend-api
@@ -69,6 +69,6 @@ jobs:
           
           # Start the application with PM2
           pm2 delete backend-api || true
-          pm2 start server.js --name backend-api
+          pm2 start index.js --name backend-api
           pm2 save
           pm2 startup
